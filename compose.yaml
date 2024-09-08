@@ -1,0 +1,36 @@
+services:
+  app:
+    container_name: "go-mongodb"
+    build: 
+      context: ./server
+      dockerfile: Dockerfile
+    tty: true
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DB_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD}
+      TZ: Asia/Tokyo
+    ports:
+      - 8080:8080
+    volumes:
+      - type: bind
+        source: ./server/work
+        target: /work
+  
+  mongo:
+    image: mongo
+    container_name: mongodb
+    hostname: mongodb
+    restart: always
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DB_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD}
+      TZ: Asia/Tokyo
+    volumes:
+      - mymongodb:/data/db
+      - mymongoconfig:/data/configdb
+
+volumes:
+  mymongodb:
+  mymongoconfig:
